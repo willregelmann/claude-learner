@@ -22,16 +22,23 @@ The `/learn` command researches any topic and generates Claude-optimized skills 
 
 ## What Gets Generated
 
-For each topic, the command creates a mini-plugin at `~/.claude/plugins/learned/<topic>/` containing:
+Skills are created at `~/.claude/skills/` with names prefixed by topic:
 
-- `plugin.json` - Metadata about the generated skills
-- `skills/` - Directory of 4-8 focused skills
+```
+~/.claude/skills/
+├── laravel-12-routing/SKILL.md
+├── laravel-12-eloquent/SKILL.md
+├── laravel-12-migrations/SKILL.md
+└── ...
+```
 
 Each skill contains:
 - When to apply the skill (triggering conditions)
 - Key patterns and best practices
 - Common mistakes to avoid
 - Concrete examples
+
+**No plugin installation required** - `~/.claude/skills/` is auto-discovered by Claude Code.
 
 ## Re-running for Updates
 
@@ -51,9 +58,9 @@ Running `/learn <topic>` again on an existing topic will:
 ## Troubleshooting
 
 **Skills not appearing?**
-- Check `~/.claude/plugins/learned/` for the generated directory
-- Restart Claude Code to pick up new plugins
+- Check `~/.claude/skills/` for generated directories
+- Restart Claude Code to load new skills
 
 **Want to regenerate from scratch?**
-- Delete `~/.claude/plugins/learned/<topic>/`
+- Delete matching skill directories: `rm -rf ~/.claude/skills/<topic>-*`
 - Run `/learn <topic>` again

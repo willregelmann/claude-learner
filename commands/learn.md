@@ -13,9 +13,11 @@ You are executing the `/learn` command to research "{{topic}}" and generate Clau
 
 ## Output Location
 
-All generated skills go to: `~/.claude/plugins/learned/{{topic-slug}}/`
+All generated skills go to: `~/.claude/skills/`
 
-Where `{{topic-slug}}` is the topic with spaces replaced by hyphens and lowercase (e.g., "Laravel 12" → "laravel-12").
+Skills are named with the topic as a prefix: `{{topic-slug}}-{{subtopic-slug}}/SKILL.md`
+
+This location is auto-discovered by Claude Code - no plugin installation required.
 
 ## Phase 1: Check Existing & Initial Discovery
 
@@ -26,7 +28,8 @@ Before proceeding, compute the TOPIC_SLUG that will be used throughout this comm
 1. Take the topic: "{{topic}}"
 2. Replace all spaces with hyphens
 3. Convert to lowercase
-4. Store as TOPIC_SLUG
+4. Remove special characters (keep only letters, numbers, hyphens)
+5. Store as TOPIC_SLUG
 
 **Example:** "Laravel 12" → "laravel-12"
 
@@ -34,13 +37,13 @@ Use TOPIC_SLUG for all directory paths and file naming in subsequent phases.
 
 ### 1.1 Check for Existing Topic
 
-First, check if this topic already has generated skills:
+Check if this topic already has generated skills:
 
 ```bash
-ls ~/.claude/plugins/learned/{{topic-slug}}/ 2>/dev/null
+ls ~/.claude/skills/ | grep "^{{topic-slug}}-" 2>/dev/null
 ```
 
-If the directory exists, you are in **UPDATE MODE**. Read existing skills to understand what's already there before researching.
+If matching directories exist, you are in **UPDATE MODE**. Read existing skills to understand what's already there before researching.
 
 ### 1.2 Initial Research
 
@@ -85,32 +88,15 @@ Gather enough information to write Claude-optimized guidance (not documentation)
 
 ## Phase 4: Generate Skills
 
-### 4.1 Create Directory Structure
+### 4.1 Create Each Skill
+
+For each subtopic, create `~/.claude/skills/{{topic-slug}}-{{subtopic-slug}}/SKILL.md`:
 
 ```bash
-mkdir -p ~/.claude/plugins/learned/{{topic-slug}}/.claude-plugin
-mkdir -p ~/.claude/plugins/learned/{{topic-slug}}/skills
+mkdir -p ~/.claude/skills/{{topic-slug}}-{{subtopic-slug}}
 ```
 
-### 4.2 Create plugin.json
-
-Write to `~/.claude/plugins/learned/{{topic-slug}}/.claude-plugin/plugin.json`:
-
-```json
-{
-  "name": "{{topic-slug}}",
-  "version": "1.0.0",
-  "description": "Skills for working with {{topic}}",
-  "generated": "{{YYYY-MM-DD}}",
-  "lastUpdated": "{{YYYY-MM-DD}}",
-  "topic": "{{topic}}",
-  "skillCount": {{number of skills}}
-}
-```
-
-### 4.3 Generate Each Skill
-
-For each subtopic, create `~/.claude/plugins/learned/{{topic-slug}}/skills/{{subtopic-slug}}/SKILL.md`:
+Then write the SKILL.md file:
 
 ```markdown
 ---
@@ -153,7 +139,7 @@ sources:
 - Keep each skill focused (300-500 words)
 - The `description` field is critical - it determines when Claude invokes the skill
 
-### 4.4 Update Mode Handling
+### 4.2 Update Mode Handling
 
 If in UPDATE MODE:
 - Compare new subtopics with existing skills
@@ -162,65 +148,22 @@ If in UPDATE MODE:
 - For obsolete subtopics: Add `obsolete: true` to frontmatter, keep file
 - Preserve any custom user additions (look for content not matching original generated patterns)
 
-### 4.5 Update Marketplace Registry
-
-The learned skills marketplace at `~/.claude/plugins/learned/.claude-plugin/marketplace.json` must be updated to include this topic.
-
-1. **Ensure marketplace directory exists:**
-```bash
-mkdir -p ~/.claude/plugins/learned/.claude-plugin
-```
-
-2. **Read existing marketplace.json** (if it exists):
-```bash
-cat ~/.claude/plugins/learned/.claude-plugin/marketplace.json 2>/dev/null
-```
-
-3. **Update or create marketplace.json:**
-
-If the file exists, parse the JSON and check if this topic already has an entry in the `plugins` array:
-- If entry exists: Update `version` and `description` fields
-- If no entry: Add a new plugin entry
-
-If the file doesn't exist, create it with the initial structure.
-
-The marketplace.json should have this structure:
-```json
-{
-  "name": "learned-skills",
-  "description": "Auto-generated skills from /learn command",
-  "owner": {
-    "name": "Claude Learner"
-  },
-  "plugins": [
-    {
-      "name": "{{topic-slug}}",
-      "description": "Skills for working with {{topic}}",
-      "version": "1.0.0",
-      "source": "./{{topic-slug}}"
-    }
-  ]
-}
-```
-
-Each topic gets one entry in the `plugins` array with `source` pointing to the topic subdirectory.
-
 ## Phase 5: Report Results
 
 After generation, report:
 
 ```
 ✓ Generated skills for "{{topic}}"
-  Location: ~/.claude/plugins/learned/{{topic-slug}}/
+  Location: ~/.claude/skills/
 
   Skills created:
-  - {{subtopic-1}}: [brief description]
-  - {{subtopic-2}}: [brief description]
+  - {{topic-slug}}-{{subtopic-1}}: [brief description]
+  - {{topic-slug}}-{{subtopic-2}}: [brief description]
   - ...
 
   Total: {{N}} skills
 
-  These skills are now available in Claude Code. They will be automatically
+  Restart Claude Code to load these skills. They will be automatically
   invoked when working on related tasks.
 ```
 
