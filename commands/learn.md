@@ -162,6 +162,49 @@ If in UPDATE MODE:
 - For obsolete subtopics: Add `obsolete: true` to frontmatter, keep file
 - Preserve any custom user additions (look for content not matching original generated patterns)
 
+### 4.5 Update Marketplace Registry
+
+The learned skills marketplace at `~/.claude/plugins/learned/.claude-plugin/marketplace.json` must be updated to include this topic.
+
+1. **Ensure marketplace directory exists:**
+```bash
+mkdir -p ~/.claude/plugins/learned/.claude-plugin
+```
+
+2. **Read existing marketplace.json** (if it exists):
+```bash
+cat ~/.claude/plugins/learned/.claude-plugin/marketplace.json 2>/dev/null
+```
+
+3. **Update or create marketplace.json:**
+
+If the file exists, parse the JSON and check if this topic already has an entry in the `plugins` array:
+- If entry exists: Update `version` and `description` fields
+- If no entry: Add a new plugin entry
+
+If the file doesn't exist, create it with the initial structure.
+
+The marketplace.json should have this structure:
+```json
+{
+  "name": "learned-skills",
+  "description": "Auto-generated skills from /learn command",
+  "owner": {
+    "name": "Claude Learner"
+  },
+  "plugins": [
+    {
+      "name": "{{topic-slug}}",
+      "description": "Skills for working with {{topic}}",
+      "version": "1.0.0",
+      "source": "./{{topic-slug}}"
+    }
+  ]
+}
+```
+
+Each topic gets one entry in the `plugins` array with `source` pointing to the topic subdirectory.
+
 ## Phase 5: Report Results
 
 After generation, report:
