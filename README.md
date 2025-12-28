@@ -5,7 +5,7 @@ A Claude Code plugin that researches any topic and generates Claude-optimized sk
 ## Installation
 
 ```bash
-claude plugins add willcodefortea/claude-learner
+claude plugins add willregelmann/claude-learner
 ```
 
 ## Usage
