@@ -19,6 +19,19 @@ Where `{{topic-slug}}` is the topic with spaces replaced by hyphens and lowercas
 
 ## Phase 1: Check Existing & Initial Discovery
 
+### 1.0 Compute Topic Slug
+
+Before proceeding, compute the TOPIC_SLUG that will be used throughout this command:
+
+1. Take the topic: "{{topic}}"
+2. Replace all spaces with hyphens
+3. Convert to lowercase
+4. Store as TOPIC_SLUG
+
+**Example:** "Laravel 12" → "laravel-12"
+
+Use TOPIC_SLUG for all directory paths and file naming in subsequent phases.
+
 ### 1.1 Check for Existing Topic
 
 First, check if this topic already has generated skills:
@@ -40,6 +53,12 @@ From these results, determine:
 - What type of topic this is (framework, library, science, methodology, etc.)
 - The main authoritative sources (official docs, key references)
 - A one-sentence description of the topic
+
+**If web search returns poor or no results:**
+- Try alternative search terms (e.g., full name vs acronym, different spellings)
+- Search for related/parent topics to find context
+- If the topic appears to be very niche or proprietary, inform the user that limited public information is available and ask if they can provide documentation or context
+- If no useful information can be found after 3-4 search attempts, report this to the user rather than generating low-quality skills
 
 ## Phase 2: Subtopic Identification
 
@@ -79,6 +98,7 @@ Write to `~/.claude/plugins/learned/{{topic-slug}}/plugin.json`:
 ```json
 {
   "name": "{{topic-slug}}",
+  "version": "1.0.0",
   "description": "Skills for working with {{topic}}",
   "generated": "{{YYYY-MM-DD}}",
   "lastUpdated": "{{YYYY-MM-DD}}",
