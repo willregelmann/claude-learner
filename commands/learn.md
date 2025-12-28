@@ -88,12 +88,13 @@ Gather enough information to write Claude-optimized guidance (not documentation)
 ### 4.1 Create Directory Structure
 
 ```bash
+mkdir -p ~/.claude/plugins/learned/{{topic-slug}}/.claude-plugin
 mkdir -p ~/.claude/plugins/learned/{{topic-slug}}/skills
 ```
 
 ### 4.2 Create plugin.json
 
-Write to `~/.claude/plugins/learned/{{topic-slug}}/plugin.json`:
+Write to `~/.claude/plugins/learned/{{topic-slug}}/.claude-plugin/plugin.json`:
 
 ```json
 {
