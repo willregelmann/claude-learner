@@ -12,23 +12,31 @@ The `/learn` command researches any topic and generates Claude-optimized skills 
 ## Usage
 
 ```
-/learn <topic>
+/learn <topic> [--project]
 ```
 
 **Examples:**
 - `/learn laravel 12` - Generate skills for Laravel 12 framework
 - `/learn rocket physics` - Generate skills for rocket physics concepts
 - `/learn kubernetes networking` - Generate skills for K8s networking
+- `/learn rust axum --project` - Generate skills in current project only
+
+**Flags:**
+- `--project`: Generate skills to `./.claude/skills/` instead of `~/.claude/skills/`. Useful for project-specific knowledge that shouldn't be shared globally.
 
 ## What Gets Generated
 
-Skills are created at `~/.claude/skills/` with names prefixed by topic:
+Skills are created at `~/.claude/skills/` (or `./.claude/skills/` with `--project` flag) with names prefixed by topic:
 
 ```
-~/.claude/skills/
+~/.claude/skills/           # default location
 ├── laravel-12-routing/SKILL.md
 ├── laravel-12-eloquent/SKILL.md
-├── laravel-12-migrations/SKILL.md
+└── ...
+
+./.claude/skills/           # with --project flag
+├── rust-axum-routing/SKILL.md
+├── rust-axum-handlers/SKILL.md
 └── ...
 ```
 

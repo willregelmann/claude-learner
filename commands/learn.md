@@ -5,6 +5,9 @@ arguments:
   - name: topic
     description: The topic to research (e.g., "laravel 12", "rocket physics")
     required: true
+  - name: project
+    description: Generate skills in current project (.claude/skills/) instead of user-level (~/.claude/skills/)
+    required: false
 ---
 
 # Learn: Research and Generate Skills
@@ -13,11 +16,15 @@ You are executing the `/learn` command to research "{{topic}}" and generate Clau
 
 ## Output Location
 
-All generated skills go to: `~/.claude/skills/`
+**Determine output directory based on --project flag:**
+- If `{{project}}` is set: Use `./.claude/skills/` (current project directory)
+- Otherwise: Use `~/.claude/skills/` (user-level, default)
+
+Store the chosen path as `SKILLS_DIR` for use throughout this command.
 
 Skills are named with the topic as a prefix: `{{topic-slug}}-{{subtopic-slug}}/SKILL.md`
 
-This location is auto-discovered by Claude Code - no plugin installation required.
+Both locations are auto-discovered by Claude Code - no plugin installation required.
 
 ## Phase 1: Check Existing & Initial Discovery
 
@@ -40,7 +47,7 @@ Use TOPIC_SLUG for all directory paths and file naming in subsequent phases.
 Check if this topic already has generated skills:
 
 ```bash
-ls ~/.claude/skills/ | grep "^{{topic-slug}}-" 2>/dev/null
+ls $SKILLS_DIR | grep "^{{topic-slug}}-" 2>/dev/null
 ```
 
 If matching directories exist, you are in **UPDATE MODE**. Read existing skills to understand what's already there before researching.
@@ -90,10 +97,10 @@ Gather enough information to write Claude-optimized guidance (not documentation)
 
 ### 4.1 Create Each Skill
 
-For each subtopic, create `~/.claude/skills/{{topic-slug}}-{{subtopic-slug}}/SKILL.md`:
+For each subtopic, create `$SKILLS_DIR/{{topic-slug}}-{{subtopic-slug}}/SKILL.md`:
 
 ```bash
-mkdir -p ~/.claude/skills/{{topic-slug}}-{{subtopic-slug}}
+mkdir -p $SKILLS_DIR/{{topic-slug}}-{{subtopic-slug}}
 ```
 
 Then write the SKILL.md file:
@@ -154,7 +161,7 @@ After generation, report:
 
 ```
 ✓ Generated skills for "{{topic}}"
-  Location: ~/.claude/skills/
+  Location: $SKILLS_DIR
 
   Skills created:
   - {{topic-slug}}-{{subtopic-1}}: [brief description]
