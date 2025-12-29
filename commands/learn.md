@@ -122,34 +122,22 @@ Verified {{N}} subtopics are distinct:
 
 This catches overlap before expensive deep research, not after.
 
-## Phase 2.5: Preview and Confirm
+## Phase 2.5: Preview
 
 Before proceeding with deep research, present the proposed skill plan to the user:
 
 ```
 📋 Skill Plan for "{{topic}}"
 
-Proposed skills ({{N}} total):
+Generating skills ({{N}} total):
 1. {{topic-slug}}-{{subtopic-1}}: [one-line description]
 2. {{topic-slug}}-{{subtopic-2}}: [one-line description]
 3. ...
 
 Location: $SKILLS_DIR
-
-Proceed with generation? Options:
-- "yes" or "y" → Generate all skills
-- "skip 2,4" → Generate all except skills 2 and 4
-- "only 1,3" → Generate only skills 1 and 3
-- "no" → Cancel generation
 ```
 
-Wait for user confirmation before proceeding. This allows users to:
-- Review scope before expensive API calls
-- Exclude subtopics they don't need
-- Abort if research quality was poor
-- Understand what will be generated
-
-If user provides no response within reasonable time, default to "yes" for non-interactive sessions.
+Then proceed automatically with generation.
 
 ## Phase 3: Deep Research per Subtopic
 

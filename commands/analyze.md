@@ -85,25 +85,22 @@ Verified {{N}} domains are distinct:
 - "api" vs "routes": MERGED → "api" (routes is implementation detail of api)
 ```
 
-### 1.4 Preview and Confirm
+### 1.4 Preview
 
 Present discovered domains to user:
 
 ```
 📋 Discovered domains in this project:
 
+Generating skills ({{N}} total):
 1. {{domain-1}}: [one-line description]
 2. {{domain-2}}: [one-line description]
 3. ...
 
-Proceed with generation? Options:
-- "yes" or "y" → Generate all skills
-- "skip 2,4" → Generate all except skills 2 and 4
-- "only 1,3" → Generate only skills 1 and 3
-- "no" → Cancel generation
+Location: .claude/skills/
 ```
 
-Wait for user confirmation before proceeding.
+Then proceed automatically with generation.
 
 ### 1.5 Generate Skills
 
