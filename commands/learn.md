@@ -103,6 +103,25 @@ For each potential subtopic, ask:
 - Concrete examples demonstrating key concepts
 - Minimal overlap with other subtopics
 
+### Deduplication Verification
+
+Before presenting to the user, verify subtopics are truly distinct:
+
+For each pair of subtopics, ask:
+- Do these cover the same concepts from different angles? → Merge them
+- Would the same user question trigger both? → Merge or clarify boundaries
+- Is one a subset of the other? → Absorb the smaller into the larger
+
+Output your reasoning:
+```
+Verified {{N}} subtopics are distinct:
+- "routing" vs "middleware": Distinct - routing is URL→controller, middleware is request filtering
+- "eloquent" vs "migrations": Distinct - ORM usage vs schema management
+- "validation" vs "forms": MERGED → "form-validation" (too much overlap)
+```
+
+This catches overlap before expensive deep research, not after.
+
 ## Phase 2.5: Preview and Confirm
 
 Before proceeding with deep research, present the proposed skill plan to the user:
