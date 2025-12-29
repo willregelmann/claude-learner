@@ -1,0 +1,11 @@
+{
+  "name": "second-opinion",
+  "version": "1.0.0",
+  "description": "Get unbiased architectural reviews from fresh perspective",
+  "author": {
+    "name": "Will"
+  },
+  "repository": "https://github.com/willregelmann/claude-learner",
+  "license": "MIT",
+  "keywords": ["architecture", "review", "decision-support", "haiku", "subagent"]
+}
