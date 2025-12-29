@@ -4,33 +4,43 @@ A Claude Code plugin that researches any topic and generates Claude-optimized sk
 
 ## Installation
 
-```bash
-claude plugins add willregelmann/claude-learner
+In a Claude Code session, ask Claude to add the marketplace:
+
 ```
+Add the marketplace: git@github.com:willregelmann/claude-learner.git
+```
+
+Or provide the marketplace information directly in your project's `.claude/config.toml`.
 
 ## Usage
 
 ```bash
-/learn <topic>
+/learn <topic>                    # Generate user-level skills
+/learn <topic> --project         # Generate project-level skills
 ```
 
 ### Examples
 
 ```bash
-/learn laravel 12        # Framework skills
-/learn rocket physics    # Science domain skills
-/learn kubernetes        # DevOps skills
-/learn negotiation       # Soft skills
+/learn laravel 12                # Framework skills (user-level)
+/learn rocket physics --project  # Science skills (project-level)
+/learn kubernetes                # DevOps skills (user-level)
+/learn negotiation               # Soft skills (user-level)
 ```
+
+### Skill Locations
+
+- **User-level (default)**: `~/.claude/skills/` - Available across all projects
+- **Project-level (`--project`)**: `./.claude/skills/` - Scoped to current project only
 
 ## What It Does
 
 1. **Researches** the topic using web search
 2. **Identifies** 4-8 key subtopics
 3. **Generates** Claude-optimized skills for each subtopic
-4. **Saves** skills to `~/.claude/plugins/learned/<topic>/`
+4. **Saves** skills to the appropriate location (user or project-level)
 
-Generated skills are automatically available in future Claude Code sessions.
+**Restart Claude Code** to load the newly generated skills.
 
 ## Generated Skill Format
 

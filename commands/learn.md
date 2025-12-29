@@ -76,22 +76,38 @@ Based on initial research, identify 4-8 major subtopics that deserve their own s
 
 For each potential subtopic, ask:
 - Is this distinct enough to warrant its own skill?
-- Would Claude benefit from specific guidance on this?
-- Is there enough substance for 300-500 words of guidance?
+- Would Claude benefit from specific behavioral guidance on this?
+- Is there enough substance for 1,500-2,000 words of focused guidance?
+- Can I identify concrete trigger phrases users would say?
 
-Examples of good subtopic breakdown:
+**Examples of good subtopic breakdown:**
 - "laravel 12" → routing, eloquent-orm, blade-templates, migrations, artisan-cli, authentication
 - "rocket physics" → orbital-mechanics, propulsion-systems, aerodynamics, staging, trajectory-planning
 - "kubernetes" → pods-deployments, services-networking, storage, configuration, troubleshooting
 
+**Each subtopic should have:**
+- Clear triggering scenarios (when users work on this specific aspect)
+- Distinct patterns and best practices
+- Common mistakes specific to that subtopic
+- Concrete examples demonstrating key concepts
+
 ## Phase 3: Deep Research per Subtopic
 
 For each identified subtopic:
-1. Use WebSearch to find detailed information
-2. Focus on: best practices, common patterns, typical mistakes, key concepts
-3. Prioritize authoritative sources
+1. Use WebSearch to find detailed, actionable information
+2. Focus on: best practices, common patterns, typical mistakes, key concepts, gotchas
+3. Prioritize authoritative sources (official docs, recognized experts)
+4. Look for concrete examples and code patterns
+5. Identify specific trigger phrases users would say for this subtopic
 
-Gather enough information to write Claude-optimized guidance (not documentation).
+**Research Quality Criteria:**
+- Find **behavioral guidance**: What to do, what to avoid, why
+- Identify **common mistakes**: Real anti-patterns developers encounter
+- Gather **concrete examples**: Working code, specific scenarios
+- Note **trigger phrases**: How users describe tasks in this area
+
+Gather enough information to write Claude-optimized skills (behavioral guidance, not reference documentation).
+Target 1,500-2,000 words of focused, actionable content per skill.
 
 ## Phase 4: Generate Skills
 
@@ -108,7 +124,7 @@ Then write the SKILL.md file:
 ```markdown
 ---
 name: {{topic-slug}}-{{subtopic-slug}}
-description: Use when [specific triggering conditions - be precise about when this skill applies]
+description: This skill should be used when the user [specific scenarios with exact phrases]. Examples: "when working with X", "implementing Y", "configuring Z". [Be concrete and specific with trigger phrases]
 generated: {{YYYY-MM-DD}}
 sources:
   - [URL 1]
@@ -119,32 +135,51 @@ sources:
 
 ## When This Skill Applies
 
-- [Specific condition 1]
-- [Specific condition 2]
-- [Specific condition 3]
+- [Specific concrete scenario 1]
+- [Specific concrete scenario 2]
+- [Specific concrete scenario 3]
 
 ## Key Patterns
 
-[Write behavioral guidance for Claude: "When doing X, always Y", "Prefer A over B because...", "The correct approach is..."]
+[Write behavioral guidance using imperative/infinitive form (verb-first instructions)]
+[Example: "To accomplish X, do Y" not "You should do X"]
+[Example: "Prefer A over B because..." not "You should prefer A"]
+[Example: "Validate input before processing" not "You should validate input"]
 
-[Include concrete patterns, not abstract explanations]
+[Include concrete, actionable patterns - not abstract theory]
 
 ## Common Mistakes to Avoid
 
-- [Mistake 1]: [Why it's wrong and what to do instead]
-- [Mistake 2]: [Why it's wrong and what to do instead]
+- **[Mistake 1]**: [Why it's wrong] → [What to do instead]
+- **[Mistake 2]**: [Why it's wrong] → [What to do instead]
+
+[Use imperative form: "Don't do X" not "You shouldn't do X"]
 
 ## Examples
 
-[Provide 1-2 concrete examples that demonstrate the key patterns]
+[Provide 1-2 concrete examples demonstrating the key patterns]
+[Use code blocks, command examples, or specific scenarios]
 ```
 
-**Skill Writing Guidelines:**
-- Write FOR Claude, not for humans reading documentation
-- Focus on behavioral guidance: what to do, what to avoid
-- Be specific and actionable, not theoretical
-- Keep each skill focused (300-500 words)
-- The `description` field is critical - it determines when Claude invokes the skill
+**Skill Writing Guidelines (Following Claude Code Best Practices):**
+
+**Description Field (Critical for Triggering):**
+- Use **third person**: "This skill should be used when the user..."
+- Include **specific trigger phrases**: Exact words/phrases users would say
+- Be **concrete**: "when implementing X", "configuring Y", "debugging Z"
+- Avoid vague: Don't write "provides guidance on X" - specify when to use it
+
+**Writing Style:**
+- Use **imperative/infinitive form**: "To do X, do Y" not "You should do X"
+- Write **FOR Claude**: Behavioral guidance, not human documentation
+- Be **objective**: "Validate input" not "You should validate input"
+- Stay **actionable**: Concrete patterns, not abstract theory
+
+**Content Organization:**
+- Keep skills **lean**: Target 1,500-2,000 words, max 3,000 words
+- **Focus**: One subtopic per skill, specific behavioral guidance
+- **Structure**: When to use, key patterns, mistakes to avoid, examples
+- **Source attribution**: Include research URLs for credibility
 
 ### 4.2 Update Mode Handling
 
