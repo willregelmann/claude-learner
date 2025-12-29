@@ -34,6 +34,24 @@ Invoke the command with a topic to research:
 
 ## What Gets Generated
 
+### Preview Before Generation
+
+After initial research, you'll see a preview of proposed skills:
+
+```
+📋 Skill Plan for "kubernetes networking"
+
+Proposed skills (6 total):
+1. kubernetes-networking-cni-plugins: Container network interface basics
+2. kubernetes-networking-services: Service discovery and DNS
+3. kubernetes-networking-ingress: Ingress controllers and routing
+...
+
+Proceed with generation? (yes/skip 2,4/only 1,3/no)
+```
+
+This lets you review scope, exclude subtopics you don't need, or abort if research quality was poor.
+
 ### Output Location
 
 Skills are created at:
@@ -71,25 +89,29 @@ Skills are designed for AI consumption using imperative/infinitive form, not sec
 
 Both `~/.claude/skills/` and `./.claude/skills/` are auto-discovered by Claude Code. No plugin installation or configuration required.
 
-## Update Mode
+## Regeneration
 
-Re-running `/learn <topic>` on an existing topic enters **UPDATE MODE**:
+Re-running `/learn <topic>` replaces existing skills with fresh generation:
 
 **What happens:**
-1. Reads existing skills to understand current coverage
-2. Researches topic for new information
-3. Updates existing skills if significant new findings discovered
-4. Adds new skills for newly discovered subtopics
-5. Preserves custom user edits (content not matching original patterns)
-6. Marks obsolete subtopics with `obsolete: true` in frontmatter
+1. Detects existing skills for the topic
+2. Warns user that existing skills will be replaced
+3. User can rename old skills to preserve them (add "-old" suffix)
+4. Generates fresh skills from new research
+5. Replaces old skill directories
 
-**When to update:**
+**When to regenerate:**
 - Topic has evolved (new version, new features)
 - Initial generation missed important subtopics
 - Want to refresh with latest best practices
 
-**Preservation:**
-Custom edits are detected and preserved during updates. The command identifies original generated patterns and keeps user modifications.
+**To preserve old versions:**
+```bash
+# Before regenerating, rename to keep old skills
+mv ~/.claude/skills/laravel-12-routing ~/.claude/skills/laravel-12-routing-v1
+```
+
+This is simpler than merge-based updates - no complex diff logic, no risk of corrupting custom edits.
 
 ## Best Practices for Effective Learning
 
@@ -142,7 +164,7 @@ rm -rf ~/.claude/skills/<topic-slug>-*
 /learn <topic>
 ```
 
-Update mode preserves edits. To force fresh generation, delete first.
+Or simply re-run `/learn <topic>` - it will replace existing skills automatically.
 
 ### Poor Quality Skills
 

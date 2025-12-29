@@ -42,7 +42,7 @@ Before proceeding, compute the TOPIC_SLUG that will be used throughout this comm
 
 Use TOPIC_SLUG for all directory paths and file naming in subsequent phases.
 
-### 1.1 Check for Existing Topic
+### 1.1 Check for Existing Skills
 
 Check if this topic already has generated skills:
 
@@ -50,7 +50,17 @@ Check if this topic already has generated skills:
 ls $SKILLS_DIR | grep "^{{topic-slug}}-" 2>/dev/null
 ```
 
-If matching directories exist, you are in **UPDATE MODE**. Read existing skills to understand what's already there before researching.
+If matching directories exist, inform the user:
+```
+⚠️ Found existing skills for "{{topic}}":
+- {{topic-slug}}-subtopic-1 (generated YYYY-MM-DD)
+- {{topic-slug}}-subtopic-2 (generated YYYY-MM-DD)
+
+These will be replaced with newly generated skills.
+To keep old versions, rename them first (e.g., add "-old" suffix).
+```
+
+This is simpler than update mode - fresh generation each time avoids merge complexity.
 
 ### 1.2 Initial Research
 
@@ -72,24 +82,55 @@ From these results, determine:
 
 ## Phase 2: Subtopic Identification
 
-Based on initial research, identify 4-8 major subtopics that deserve their own skills.
+Based on initial research, identify the major subtopics that deserve their own skills. Let the topic determine granularity naturally - don't force a fixed number.
 
 For each potential subtopic, ask:
 - Is this distinct enough to warrant its own skill?
 - Would Claude benefit from specific behavioral guidance on this?
 - Is there enough substance for 1,500-2,000 words of focused guidance?
 - Can I identify concrete trigger phrases users would say?
+- Does this overlap significantly with another subtopic? (If yes, merge them)
 
-**Examples of good subtopic breakdown:**
-- "laravel 12" → routing, eloquent-orm, blade-templates, migrations, artisan-cli, authentication
-- "rocket physics" → orbital-mechanics, propulsion-systems, aerodynamics, staging, trajectory-planning
-- "kubernetes" → pods-deployments, services-networking, storage, configuration, troubleshooting
+**Examples of natural granularity:**
+- "laravel 12" → 8-12 subtopics (large framework with many distinct areas)
+- "git branching strategies" → 2-4 subtopics (focused topic, fewer natural divisions)
+- "kubernetes networking" → 5-7 subtopics (medium scope, distinct networking concepts)
 
 **Each subtopic should have:**
 - Clear triggering scenarios (when users work on this specific aspect)
 - Distinct patterns and best practices
 - Common mistakes specific to that subtopic
 - Concrete examples demonstrating key concepts
+- Minimal overlap with other subtopics
+
+## Phase 2.5: Preview and Confirm
+
+Before proceeding with deep research, present the proposed skill plan to the user:
+
+```
+📋 Skill Plan for "{{topic}}"
+
+Proposed skills ({{N}} total):
+1. {{topic-slug}}-{{subtopic-1}}: [one-line description]
+2. {{topic-slug}}-{{subtopic-2}}: [one-line description]
+3. ...
+
+Location: $SKILLS_DIR
+
+Proceed with generation? Options:
+- "yes" or "y" → Generate all skills
+- "skip 2,4" → Generate all except skills 2 and 4
+- "only 1,3" → Generate only skills 1 and 3
+- "no" → Cancel generation
+```
+
+Wait for user confirmation before proceeding. This allows users to:
+- Review scope before expensive API calls
+- Exclude subtopics they don't need
+- Abort if research quality was poor
+- Understand what will be generated
+
+If user provides no response within reasonable time, default to "yes" for non-interactive sessions.
 
 ## Phase 3: Deep Research per Subtopic
 
@@ -181,14 +222,12 @@ sources:
 - **Structure**: When to use, key patterns, mistakes to avoid, examples
 - **Source attribution**: Include research URLs for credibility
 
-### 4.2 Update Mode Handling
+### 4.2 Replace Existing Skills
 
-If in UPDATE MODE:
-- Compare new subtopics with existing skills
-- For existing subtopics: Update content if research shows significant new information
-- For new subtopics: Create new skill files
-- For obsolete subtopics: Add `obsolete: true` to frontmatter, keep file
-- Preserve any custom user additions (look for content not matching original generated patterns)
+If existing skills were found in Phase 1.1:
+- Delete the old skill directories before writing new ones
+- This ensures clean generation without merge complexity
+- Users who want to preserve old versions should rename them beforehand
 
 ## Phase 5: Report Results
 
@@ -209,7 +248,6 @@ After generation, report:
   invoked when working on related tasks.
 ```
 
-If UPDATE MODE, also report:
-- Skills updated: N
-- Skills added: N
-- Skills unchanged: N
+If existing skills were replaced, also report:
+- Previous skills removed: N
+- New skills generated: N
