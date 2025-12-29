@@ -5,8 +5,8 @@ arguments:
   - name: topic
     description: The topic to research (e.g., "laravel 12", "rocket physics")
     required: true
-  - name: project
-    description: Generate skills in current project (.claude/skills/) instead of user-level (~/.claude/skills/)
+  - name: global
+    description: Generate skills at user-level (~/.claude/skills/) instead of current project (.claude/skills/)
     required: false
 ---
 
@@ -16,9 +16,9 @@ You are executing the `/learn` command to research "{{topic}}" and generate Clau
 
 ## Output Location
 
-**Determine output directory based on --project flag:**
-- If `{{project}}` is set: Use `./.claude/skills/` (current project directory)
-- Otherwise: Use `~/.claude/skills/` (user-level, default)
+**Determine output directory based on --global flag:**
+- If `{{global}}` is set: Use `~/.claude/skills/` (user-level)
+- Otherwise: Use `./.claude/skills/` (current project directory, default)
 
 Store the chosen path as `SKILLS_DIR` for use throughout this command.
 

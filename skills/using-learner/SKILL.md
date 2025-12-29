@@ -15,7 +15,7 @@ The `/learn` command researches any topic and generates Claude-optimized skills 
 Invoke the command with a topic to research:
 
 ```bash
-/learn <topic> [--project]
+/learn <topic> [--global]
 ```
 
 ### Examples
@@ -23,14 +23,14 @@ Invoke the command with a topic to research:
 - `/learn laravel 12` - Generate skills for Laravel 12 framework
 - `/learn rocket physics` - Generate skills for rocket physics concepts
 - `/learn kubernetes networking` - Generate skills for K8s networking
-- `/learn rust axum --project` - Generate skills in current project only
+- `/learn rust axum --global` - Generate skills at user-level for all projects
 
 ### Flags
 
-**--project**: Generate skills to `./.claude/skills/` instead of `~/.claude/skills/`
-- Use for project-specific knowledge that shouldn't be shared globally
-- Skills in `./.claude/skills/` are discovered when working in that project
-- Skills in `~/.claude/skills/` are available across all projects
+**--global**: Generate skills to `~/.claude/skills/` instead of `./.claude/skills/`
+- Use when skills should be available across all projects
+- Default (no flag) generates to `./.claude/skills/` (current project)
+- Skills in `~/.claude/skills/` are available everywhere
 
 ## What Gets Generated
 
@@ -55,19 +55,19 @@ This lets you review scope, exclude subtopics you don't need, or abort if resear
 ### Output Location
 
 Skills are created at:
-- **Default**: `~/.claude/skills/` (user-level, available everywhere)
-- **With --project**: `./.claude/skills/` (project-level, scoped to current project)
+- **Default**: `./.claude/skills/` (project-level, scoped to current project)
+- **With --global**: `~/.claude/skills/` (user-level, available everywhere)
 
 Skills are named with topic prefix: `{{topic-slug}}-{{subtopic-slug}}/SKILL.md`
 
 ```
-~/.claude/skills/           # default location
+./.claude/skills/           # default location (project-level)
 ├── laravel-12-routing/SKILL.md
 ├── laravel-12-eloquent/SKILL.md
 ├── laravel-12-blade-templates/SKILL.md
 └── ...
 
-./.claude/skills/           # with --project flag
+~/.claude/skills/           # with --global flag (user-level)
 ├── rust-axum-routing/SKILL.md
 ├── rust-axum-handlers/SKILL.md
 └── ...
@@ -137,7 +137,7 @@ This is simpler than merge-based updates - no complex diff logic, no risk of cor
 ### After Generation
 
 1. **Restart Claude Code** to load new skills
-2. **Review generated skills** in `~/.claude/skills/` or `./.claude/skills/`
+2. **Review generated skills** in `./.claude/skills/` or `~/.claude/skills/`
 3. **Test triggering** by working on related tasks
 4. **Customize if needed** - add project-specific details, fix inaccuracies
 5. **Update later** if topic evolves
