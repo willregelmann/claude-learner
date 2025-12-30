@@ -1,6 +1,7 @@
 {
   "name": "claude-learner-marketplace",
   "description": "Marketplace for Claude Learner plugin",
+  "auto-update": true,
   "owner": {
     "name": "Will Regelmann"
   },
@@ -8,17 +9,8 @@
     {
       "name": "claude-learner",
       "description": "Research any topic and generate Claude-optimized skills",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "source": "./",
-      "author": {
-        "name": "Will Regelmann"
-      }
-    },
-    {
-      "name": "second-opinion",
-      "description": "Get unbiased architectural reviews from fresh Haiku perspective",
-      "version": "1.0.0",
-      "source": "./second-opinion",
       "author": {
         "name": "Will Regelmann"
       }
