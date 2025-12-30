@@ -1,26 +1,32 @@
 ---
 name: analyze
 description: Analyze current project and generate domain knowledge skills
-arguments:
-  - name: focus
-    description: Optional area to focus on (e.g., "billing", "authentication")
-    required: false
+argument-hint: [focus-area]
 ---
 
 # Analyze: Generate Domain Knowledge Skills
 
 You are executing the `/analyze` command to examine the current project and generate skills capturing its domain knowledge, business logic, and key concepts.
 
+## Argument Parsing
+
+Parse the focus area from: `$ARGUMENTS`
+
+- If `$ARGUMENTS` is empty: Set FOCUS_AREA to empty (full project analysis)
+- If `$ARGUMENTS` has content: Set FOCUS_AREA to that value
+  - Example: `/analyze inbound email` → FOCUS_AREA is "inbound email"
+  - Example: `/analyze billing` → FOCUS_AREA is "billing"
+
 ## Output Location
 
 All generated skills go to `.claude/skills/` (project-level).
 
-Skills are named: `{{domain}}/SKILL.md`
+Skills are named: `domain-name/SKILL.md`
 
 ## Mode Selection
 
-**Determine mode based on focus argument:**
-- If `{{focus}}` is provided: Execute **Focused Analysis** (Phase 2)
+**Determine mode based on FOCUS_AREA:**
+- If FOCUS_AREA is set: Execute **Focused Analysis** (Phase 2)
 - Otherwise: Execute **Full Discovery** (Phase 1)
 
 ---
@@ -110,15 +116,15 @@ For each confirmed domain, proceed to **Phase 3: Skill Generation**.
 
 ## Phase 2: Focused Analysis (With Focus)
 
-When user provides `{{focus}}`:
+When user provides `FOCUS_AREA`:
 
 ### 2.1 Locate the Domain
 
-Search for files/directories matching "{{focus}}":
+Search for files/directories matching "FOCUS_AREA":
 
 1. **Direct matches:**
-   - Directories named `{{focus}}` or containing `{{focus}}`
-   - Files with `{{focus}}` in the name
+   - Directories named `FOCUS_AREA` or containing `FOCUS_AREA`
+   - Files with `FOCUS_AREA` in the name
 
 2. **Related patterns:**
    - Similar terms (e.g., "billing" → also check "payment", "invoice")
@@ -126,7 +132,7 @@ Search for files/directories matching "{{focus}}":
    - Common abbreviations
 
 3. **Content search:**
-   - Grep for `{{focus}}` in file contents
+   - Grep for `FOCUS_AREA` in file contents
    - Look for classes, functions, comments mentioning the term
 
 ### 2.2 Handle Not Found
@@ -134,7 +140,7 @@ Search for files/directories matching "{{focus}}":
 If no matching files found:
 
 ```
-❌ Could not find domain "{{focus}}" in this project.
+❌ Could not find domain "FOCUS_AREA" in this project.
 
 Discovered domains:
 - {{domain-1}}
@@ -272,9 +278,9 @@ After generation, report:
 
 If this was a focused analysis:
 ```
-✓ Generated domain skill for "{{focus}}"
+✓ Generated domain skill for "FOCUS_AREA"
 
-  Location: .claude/skills/{{focus}}/SKILL.md
+  Location: .claude/skills/FOCUS_AREA/SKILL.md
 
   This skill captures:
   - [key concept 1]

@@ -1,28 +1,34 @@
 ---
 name: learn
 description: Research a topic and generate Claude-optimized skills
-arguments:
-  - name: topic
-    description: The topic to research (e.g., "laravel 12", "rocket physics")
-    required: true
-  - name: global
-    description: Generate skills at user-level (~/.claude/skills/) instead of current project (.claude/skills/)
-    required: false
+argument-hint: <topic> [--global]
 ---
 
 # Learn: Research and Generate Skills
 
-You are executing the `/learn` command to research "{{topic}}" and generate Claude-optimized skills.
+You are executing the `/learn` command. First, parse the arguments from: `$ARGUMENTS`
+
+## Argument Parsing
+
+1. **Extract the topic**: Everything in `$ARGUMENTS` except `--global` flag
+   - Example: `laravel 12 --global` → topic is "laravel 12"
+   - Example: `react hooks` → topic is "react hooks"
+
+2. **Check for --global flag**: If `$ARGUMENTS` contains `--global`, set GLOBAL_MODE=true
+
+3. **Validate**: If no topic provided (empty after removing --global), ask user what topic to research
+
+Store the parsed topic as TOPIC for use throughout this command.
 
 ## Output Location
 
 **Determine output directory based on --global flag:**
-- If `{{global}}` is set: Use `~/.claude/skills/` (user-level)
+- If GLOBAL_MODE is true: Use `~/.claude/skills/` (user-level)
 - Otherwise: Use `./.claude/skills/` (current project directory, default)
 
 Store the chosen path as `SKILLS_DIR` for use throughout this command.
 
-Skills are named with the topic as a prefix: `{{topic-slug}}-{{subtopic-slug}}/SKILL.md`
+Skills are named with the topic as a prefix: `TOPIC_SLUG-subtopic-slug/SKILL.md`
 
 Both locations are auto-discovered by Claude Code - no plugin installation required.
 
@@ -32,7 +38,7 @@ Both locations are auto-discovered by Claude Code - no plugin installation requi
 
 Before proceeding, compute the TOPIC_SLUG that will be used throughout this command:
 
-1. Take the topic: "{{topic}}"
+1. Take the topic: TOPIC (parsed from arguments above)
 2. Replace all spaces with hyphens
 3. Convert to lowercase
 4. Remove special characters (keep only letters, numbers, hyphens)
@@ -47,14 +53,14 @@ Use TOPIC_SLUG for all directory paths and file naming in subsequent phases.
 Check if this topic already has generated skills:
 
 ```bash
-ls $SKILLS_DIR | grep "^{{topic-slug}}-" 2>/dev/null
+ls $SKILLS_DIR | grep "^TOPIC_SLUG-" 2>/dev/null
 ```
 
 If matching directories exist, inform the user:
 ```
-⚠️ Found existing skills for "{{topic}}":
-- {{topic-slug}}-subtopic-1 (generated YYYY-MM-DD)
-- {{topic-slug}}-subtopic-2 (generated YYYY-MM-DD)
+⚠️ Found existing skills for "TOPIC":
+- TOPIC_SLUG-subtopic-1 (generated YYYY-MM-DD)
+- TOPIC_SLUG-subtopic-2 (generated YYYY-MM-DD)
 
 These will be replaced with newly generated skills.
 To keep old versions, rename them first (e.g., add "-old" suffix).
@@ -65,9 +71,9 @@ This is simpler than update mode - fresh generation each time avoids merge compl
 ### 1.2 Initial Research
 
 Use WebSearch to understand the topic:
-- Search: "{{topic}} overview"
-- Search: "{{topic}} key concepts"
-- Search: "{{topic}} official documentation"
+- Search: "TOPIC overview"
+- Search: "TOPIC key concepts"
+- Search: "TOPIC official documentation"
 
 From these results, determine:
 - What type of topic this is (framework, library, science, methodology, etc.)
@@ -127,11 +133,11 @@ This catches overlap before expensive deep research, not after.
 Before proceeding with deep research, present the proposed skill plan to the user:
 
 ```
-📋 Skill Plan for "{{topic}}"
+📋 Skill Plan for "TOPIC"
 
 Generating skills ({{N}} total):
-1. {{topic-slug}}-{{subtopic-1}}: [one-line description]
-2. {{topic-slug}}-{{subtopic-2}}: [one-line description]
+1. TOPIC_SLUG-{{subtopic-1}}: [one-line description]
+2. TOPIC_SLUG-{{subtopic-2}}: [one-line description]
 3. ...
 
 Location: $SKILLS_DIR
@@ -161,17 +167,17 @@ Target 1,500-2,000 words of focused, actionable content per skill.
 
 ### 4.1 Create Each Skill
 
-For each subtopic, create `$SKILLS_DIR/{{topic-slug}}-{{subtopic-slug}}/SKILL.md`:
+For each subtopic, create `$SKILLS_DIR/TOPIC_SLUG-{{subtopic-slug}}/SKILL.md`:
 
 ```bash
-mkdir -p $SKILLS_DIR/{{topic-slug}}-{{subtopic-slug}}
+mkdir -p $SKILLS_DIR/TOPIC_SLUG-{{subtopic-slug}}
 ```
 
 Then write the SKILL.md file:
 
 ```markdown
 ---
-name: {{topic-slug}}-{{subtopic-slug}}
+name: TOPIC_SLUG-{{subtopic-slug}}
 description: This skill should be used when the user [specific scenarios with exact phrases]. Examples: "when working with X", "implementing Y", "configuring Z". [Be concrete and specific with trigger phrases]
 generated: {{YYYY-MM-DD}}
 sources:
@@ -241,12 +247,12 @@ If existing skills were found in Phase 1.1:
 After generation, report:
 
 ```
-✓ Generated skills for "{{topic}}"
+✓ Generated skills for "TOPIC"
   Location: $SKILLS_DIR
 
   Skills created:
-  - {{topic-slug}}-{{subtopic-1}}: [brief description]
-  - {{topic-slug}}-{{subtopic-2}}: [brief description]
+  - TOPIC_SLUG-{{subtopic-1}}: [brief description]
+  - TOPIC_SLUG-{{subtopic-2}}: [brief description]
   - ...
 
   Total: {{N}} skills
