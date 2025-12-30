@@ -15,32 +15,46 @@ Or provide the marketplace information directly in your project's `.claude/confi
 ## Usage
 
 ```bash
-/learn <topic>                    # Generate user-level skills
-/learn <topic> --project         # Generate project-level skills
+/learn <topic>                    # Generate project-level skills (default)
+/learn <topic> --global           # Generate user-level skills
+/analyze                          # Analyze project, generate domain skills
+/analyze <focus-area>             # Deep-dive into specific domain
 ```
 
 ### Examples
 
 ```bash
-/learn laravel 12                # Framework skills (user-level)
-/learn rocket physics --project  # Science skills (project-level)
-/learn kubernetes                # DevOps skills (user-level)
-/learn negotiation               # Soft skills (user-level)
+/learn laravel 12                 # Framework skills (project-level)
+/learn kubernetes --global        # DevOps skills (user-level, all projects)
+/learn negotiation                # Soft skills (project-level)
+/analyze                          # Discover and document project domains
+/analyze billing                  # Deep-dive into billing domain
 ```
 
 ### Skill Locations
 
-- **User-level (default)**: `~/.claude/skills/` - Available across all projects
-- **Project-level (`--project`)**: `./.claude/skills/` - Scoped to current project only
+- **Project-level (default)**: `./.claude/skills/` - Scoped to current project
+- **User-level (`--global`)**: `~/.claude/skills/` - Available across all projects
 
 ## What It Does
 
-1. **Researches** the topic using web search
-2. **Identifies** 4-8 key subtopics
-3. **Generates** Claude-optimized skills for each subtopic
-4. **Saves** skills to the appropriate location (user or project-level)
+### `/learn` - Research External Topics
 
-**Restart Claude Code** to load the newly generated skills.
+1. **Researches** the topic using web search
+2. **Identifies** key subtopics (typically 4-12, depending on scope)
+3. **Generates** Claude-optimized skills for each subtopic
+4. **Saves** skills to the appropriate location
+
+### `/analyze` - Document Your Codebase
+
+1. **Scans** project structure and key files
+2. **Identifies** distinct domains (auth, billing, notifications, etc.)
+3. **Generates** skills capturing domain knowledge and patterns
+4. **Saves** skills to `.claude/skills/` (project-level only)
+
+Use `/analyze <focus-area>` for deeper analysis of a specific domain.
+
+**Restart Claude Code** to load newly generated skills.
 
 ## Generated Skill Format
 
@@ -52,10 +66,7 @@ Each skill contains:
 
 ## Updating Skills
 
-Re-run `/learn <topic>` to:
-- Update existing skills with new information
-- Add skills for newly discovered subtopics
-- Preserve your custom edits
+Re-run `/learn <topic>` or `/analyze` to regenerate skills. Existing skills for that topic/domain are replaced with fresh versions.
 
 ## License
 
