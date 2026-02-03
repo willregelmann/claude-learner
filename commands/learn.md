@@ -28,45 +28,38 @@ Store the parsed topic as TOPIC for use throughout this command.
 
 Store the chosen path as `SKILLS_DIR` for use throughout this command.
 
-Skills are named with the topic as a prefix: `TOPIC_SLUG-subtopic-slug/SKILL.md`
-
 Both locations are auto-discovered by Claude Code - no plugin installation required.
 
 ## Phase 1: Check Existing & Initial Discovery
 
-### 1.0 Compute Topic Slug
+### 1.1 List Existing Skills
 
-Before proceeding, compute the TOPIC_SLUG that will be used throughout this command:
-
-1. Take the topic: TOPIC (parsed from arguments above)
-2. Replace all spaces with hyphens
-3. Convert to lowercase
-4. Remove special characters (keep only letters, numbers, hyphens)
-5. Store as TOPIC_SLUG
-
-**Example:** "Laravel 12" → "laravel-12"
-
-Use TOPIC_SLUG for all directory paths and file naming in subsequent phases.
-
-### 1.1 Check for Existing Skills
-
-Check if this topic already has generated skills:
+Before generating new skills, list ALL existing skills in `$SKILLS_DIR` to understand what's already available:
 
 ```bash
-ls $SKILLS_DIR | grep "^TOPIC_SLUG-" 2>/dev/null
+ls -la $SKILLS_DIR 2>/dev/null || echo "No skills directory yet"
 ```
 
-If matching directories exist, inform the user:
-```
-⚠️ Found existing skills for "TOPIC":
-- TOPIC_SLUG-subtopic-1 (generated YYYY-MM-DD)
-- TOPIC_SLUG-subtopic-2 (generated YYYY-MM-DD)
+Present the list to the user and identify any that might be related to TOPIC:
+- Look for **exact matches**: Skills that clearly cover the same topic
+- Look for **close matches**: Skills with similar names, overlapping concepts, or related domains
+- Look for **potential conflicts**: Skills that might cover similar ground
 
-These will be replaced with newly generated skills.
-To keep old versions, rename them first (e.g., add "-old" suffix).
+```
+📂 Existing skills in $SKILLS_DIR:
+- kubernetes-networking (generated 2024-01-15)
+- kubernetes-pods (generated 2024-01-15)
+- react-hooks (generated 2024-02-01)
+- ...
+
+🔍 Potentially related to "TOPIC":
+- [list any that seem related, even loosely]
+
+If any existing skills should be replaced or updated, let me know.
+Otherwise, I'll generate new skills alongside these.
 ```
 
-This is simpler than update mode - fresh generation each time avoids merge complexity.
+This allows the user to see what exists and decide whether to replace, update, or add to their skill collection.
 
 ### 1.2 Initial Research
 
@@ -109,6 +102,14 @@ For each potential subtopic, ask:
 - Concrete examples demonstrating key concepts
 - Minimal overlap with other subtopics
 
+**Skill Naming:**
+Choose clear, descriptive names for each skill. Names should be:
+- Meaningful and self-documenting (e.g., `eloquent-relationships` not `laravel-12-eloquent-relationships`)
+- Concise but specific enough to distinguish from related skills
+- Lowercase with hyphens (e.g., `react-state-management`, `kubernetes-ingress`)
+
+Don't mechanically prefix with the topic - use your judgment to pick the most useful name.
+
 ### Deduplication Verification
 
 Before presenting to the user, verify subtopics are truly distinct:
@@ -136,8 +137,8 @@ Before proceeding with deep research, present the proposed skill plan to the use
 📋 Skill Plan for "TOPIC"
 
 Generating skills ({{N}} total):
-1. TOPIC_SLUG-{{subtopic-1}}: [one-line description]
-2. TOPIC_SLUG-{{subtopic-2}}: [one-line description]
+1. {{skill-name-1}}: [one-line description]
+2. {{skill-name-2}}: [one-line description]
 3. ...
 
 Location: $SKILLS_DIR
@@ -167,17 +168,17 @@ Target 1,500-2,000 words of focused, actionable content per skill.
 
 ### 4.1 Create Each Skill
 
-For each subtopic, create `$SKILLS_DIR/TOPIC_SLUG-{{subtopic-slug}}/SKILL.md`:
+For each subtopic, create `$SKILLS_DIR/{{skill-name}}/SKILL.md`:
 
 ```bash
-mkdir -p $SKILLS_DIR/TOPIC_SLUG-{{subtopic-slug}}
+mkdir -p $SKILLS_DIR/{{skill-name}}
 ```
 
 Then write the SKILL.md file:
 
 ```markdown
 ---
-name: TOPIC_SLUG-{{subtopic-slug}}
+name: {{skill-name}}
 description: This skill should be used when the user [specific scenarios with exact phrases]. Examples: "when working with X", "implementing Y", "configuring Z". [Be concrete and specific with trigger phrases]
 generated: {{YYYY-MM-DD}}
 sources:
@@ -235,12 +236,12 @@ sources:
 - **Structure**: When to use, key patterns, mistakes to avoid, examples
 - **Source attribution**: Include research URLs for credibility
 
-### 4.2 Replace Existing Skills
+### 4.2 Handle Existing Skills
 
-If existing skills were found in Phase 1.1:
-- Delete the old skill directories before writing new ones
-- This ensures clean generation without merge complexity
-- Users who want to preserve old versions should rename them beforehand
+If existing skills were identified as related in Phase 1.1 and the user confirmed they should be replaced:
+- Delete those specific skill directories before writing the replacements
+- Only delete skills the user explicitly agreed to replace
+- Skills not mentioned are left untouched
 
 ## Phase 5: Report Results
 
@@ -251,8 +252,8 @@ After generation, report:
   Location: $SKILLS_DIR
 
   Skills created:
-  - TOPIC_SLUG-{{subtopic-1}}: [brief description]
-  - TOPIC_SLUG-{{subtopic-2}}: [brief description]
+  - {{skill-name-1}}: [brief description]
+  - {{skill-name-2}}: [brief description]
   - ...
 
   Total: {{N}} skills
@@ -262,5 +263,5 @@ After generation, report:
 ```
 
 If existing skills were replaced, also report:
-- Previous skills removed: N
+- Previous skills replaced: [list names]
 - New skills generated: N

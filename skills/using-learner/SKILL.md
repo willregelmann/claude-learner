@@ -42,9 +42,9 @@ After initial research, you'll see a preview of proposed skills:
 📋 Skill Plan for "kubernetes networking"
 
 Proposed skills (6 total):
-1. kubernetes-networking-cni-plugins: Container network interface basics
-2. kubernetes-networking-services: Service discovery and DNS
-3. kubernetes-networking-ingress: Ingress controllers and routing
+1. cni-plugins: Container network interface basics
+2. service-discovery: Service discovery and DNS
+3. ingress-routing: Ingress controllers and routing
 ...
 
 Proceed with generation? (yes/skip 2,4/only 1,3/no)
@@ -58,18 +58,18 @@ Skills are created at:
 - **Default**: `./.claude/skills/` (project-level, scoped to current project)
 - **With --global**: `~/.claude/skills/` (user-level, available everywhere)
 
-Skills are named with topic prefix: `{{topic-slug}}-{{subtopic-slug}}/SKILL.md`
+Skill names are chosen by the agent to be meaningful and self-documenting:
 
 ```
 ./.claude/skills/           # default location (project-level)
-├── laravel-12-routing/SKILL.md
-├── laravel-12-eloquent/SKILL.md
-├── laravel-12-blade-templates/SKILL.md
+├── eloquent-relationships/SKILL.md
+├── blade-components/SKILL.md
+├── laravel-routing/SKILL.md
 └── ...
 
 ~/.claude/skills/           # with --global flag (user-level)
-├── rust-axum-routing/SKILL.md
-├── rust-axum-handlers/SKILL.md
+├── axum-handlers/SKILL.md
+├── axum-middleware/SKILL.md
 └── ...
 ```
 
@@ -91,14 +91,14 @@ Both `~/.claude/skills/` and `./.claude/skills/` are auto-discovered by Claude C
 
 ## Regeneration
 
-Re-running `/learn <topic>` replaces existing skills with fresh generation:
+Re-running `/learn <topic>` shows existing skills and lets you decide what to replace:
 
 **What happens:**
-1. Detects existing skills for the topic
-2. Warns user that existing skills will be replaced
-3. User can rename old skills to preserve them (add "-old" suffix)
+1. Lists all existing skills in the target directory
+2. Identifies skills that might be related to the topic (close matches, overlapping concepts)
+3. User decides which skills to replace vs. keep
 4. Generates fresh skills from new research
-5. Replaces old skill directories
+5. Only replaces skills user explicitly confirmed
 
 **When to regenerate:**
 - Topic has evolved (new version, new features)
@@ -108,10 +108,8 @@ Re-running `/learn <topic>` replaces existing skills with fresh generation:
 **To preserve old versions:**
 ```bash
 # Before regenerating, rename to keep old skills
-mv ~/.claude/skills/laravel-12-routing ~/.claude/skills/laravel-12-routing-v1
+mv ~/.claude/skills/eloquent-relationships ~/.claude/skills/eloquent-relationships-v1
 ```
-
-This is simpler than merge-based updates - no complex diff logic, no risk of corrupting custom edits.
 
 ## Best Practices for Effective Learning
 
@@ -148,7 +146,7 @@ This is simpler than merge-based updates - no complex diff logic, no risk of cor
 
 **Check generation:**
 ```bash
-ls ~/.claude/skills/ | grep "topic-slug"
+ls ~/.claude/skills/
 ```
 
 **If skills exist but not loading:**
@@ -160,11 +158,11 @@ ls ~/.claude/skills/ | grep "topic-slug"
 
 To delete and regenerate:
 ```bash
-rm -rf ~/.claude/skills/<topic-slug>-*
+rm -rf ~/.claude/skills/<skill-name>
 /learn <topic>
 ```
 
-Or simply re-run `/learn <topic>` - it will replace existing skills automatically.
+Or simply re-run `/learn <topic>` - it will show existing skills and let you choose which to replace.
 
 ### Poor Quality Skills
 
