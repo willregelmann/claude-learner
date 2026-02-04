@@ -1,36 +1,32 @@
 ---
 name: learn
-description: Research a topic and generate Claude-optimized skills
+description: Research a topic and generate a Claude-optimized skill
 argument-hint: <topic> [--global]
 ---
 
-# Learn: Research and Generate Skills
+# Learn: Research and Generate a Skill
 
 You are executing the `/learn` command. First, parse the arguments from: `$ARGUMENTS`
 
 ## Argument Parsing
 
 1. **Extract the topic**: Everything in `$ARGUMENTS` except `--global` flag
-   - Example: `laravel 12 --global` → topic is "laravel 12"
-   - Example: `react hooks` → topic is "react hooks"
-
 2. **Check for --global flag**: If `$ARGUMENTS` contains `--global`, set GLOBAL_MODE=true
+3. **Validate**: If no topic provided, ask user what topic to research
 
-3. **Validate**: If no topic provided (empty after removing --global), ask user what topic to research
-
-Store the parsed topic as TOPIC for use throughout this command.
+Store the parsed topic as TOPIC.
 
 ## Output Location
 
-**Determine output directory based on --global flag:**
 - If GLOBAL_MODE is true: Use `~/.claude/skills/` (user-level)
-- Otherwise: Use `./.claude/skills/` (current project directory, default)
+- Otherwise: Use `./.claude/skills/` (project directory, default)
 
-Store the chosen path as `SKILLS_DIR` for use throughout this command.
+Store as `SKILLS_DIR`.
 
 Both locations are auto-discovered by Claude Code - no plugin installation required.
 
-## Phase 1: Check Existing & Initial Discovery
+1. Take TOPIC, replace spaces with hyphens, lowercase, remove special characters
+2. Store as TOPIC_SLUG (e.g., "Laravel 12" → "laravel-12")
 
 ### 1.1 List Existing Skills
 
@@ -68,18 +64,15 @@ Use WebSearch to understand the topic:
 - Search: "TOPIC key concepts"
 - Search: "TOPIC official documentation"
 
-From these results, determine:
-- What type of topic this is (framework, library, science, methodology, etc.)
-- The main authoritative sources (official docs, key references)
-- A one-sentence description of the topic
+Gather:
+- Key patterns and best practices
+- Common mistakes to avoid
+- Concrete examples
+- Trigger phrases users would say
 
-**If web search returns poor or no results:**
-- Try alternative search terms (e.g., full name vs acronym, different spellings)
-- Search for related/parent topics to find context
-- If the topic appears to be very niche or proprietary, inform the user that limited public information is available and ask if they can provide documentation or context
-- If no useful information can be found after 3-4 search attempts, report this to the user rather than generating low-quality skills
+## Phase 2: Generate ONE Skill
 
-## Phase 2: Subtopic Identification
+Create the skill directory and file:
 
 Based on initial research, identify the major subtopics that deserve their own skills. Let the topic determine granularity naturally - don't force a fixed number.
 
@@ -174,7 +167,7 @@ For each subtopic, create `$SKILLS_DIR/{{skill-name}}/SKILL.md`:
 mkdir -p $SKILLS_DIR/{{skill-name}}
 ```
 
-Then write the SKILL.md file:
+Write `$SKILLS_DIR/TOPIC_SLUG/SKILL.md`:
 
 ```markdown
 ---
@@ -186,43 +179,37 @@ sources:
   - [URL 2]
 ---
 
-# {{Subtopic Title}}
+# [Topic Title]
 
 ## When This Skill Applies
 
-- [Specific concrete scenario 1]
-- [Specific concrete scenario 2]
-- [Specific concrete scenario 3]
+- [Scenario 1]
+- [Scenario 2]
+- [Scenario 3]
 
 ## Key Patterns
 
-[Write behavioral guidance using imperative/infinitive form (verb-first instructions)]
-[Example: "To accomplish X, do Y" not "You should do X"]
-[Example: "Prefer A over B because..." not "You should prefer A"]
-[Example: "Validate input before processing" not "You should validate input"]
-
-[Include concrete, actionable patterns - not abstract theory]
+[Behavioral guidance organized by concept]
+[Use imperative form: "To do X, do Y"]
+[Include code examples where helpful]
 
 ## Common Mistakes to Avoid
 
-- **[Mistake 1]**: [Why it's wrong] → [What to do instead]
-- **[Mistake 2]**: [Why it's wrong] → [What to do instead]
-
-[Use imperative form: "Don't do X" not "You shouldn't do X"]
+- **[Mistake 1]**: [Why wrong] → [What to do instead]
+- **[Mistake 2]**: [Why wrong] → [What to do instead]
 
 ## Examples
 
-[Provide 1-2 concrete examples demonstrating the key patterns]
-[Use code blocks, command examples, or specific scenarios]
+[1-2 concrete examples demonstrating key patterns]
 ```
 
-**Skill Writing Guidelines (Following Claude Code Best Practices):**
+**Writing Guidelines:**
+- **Description**: Include WHAT + WHEN + trigger phrases
+- **Content**: Behavioral guidance, not reference documentation
+- **Length**: Keep under 500 lines; be concise
+- **Style**: Imperative form ("Do X" not "You should do X")
 
-**Description Field (Critical for Triggering):**
-- Use **third person**: "This skill should be used when the user..."
-- Include **specific trigger phrases**: Exact words/phrases users would say
-- Be **concrete**: "when implementing X", "configuring Y", "debugging Z"
-- Avoid vague: Don't write "provides guidance on X" - specify when to use it
+## Phase 3: Report
 
 **Writing Style:**
 - Use **imperative/infinitive form**: "To do X, do Y" not "You should do X"
@@ -248,8 +235,8 @@ If existing skills were identified as related in Phase 1.1 and the user confirme
 After generation, report:
 
 ```
-✓ Generated skills for "TOPIC"
-  Location: $SKILLS_DIR
+✓ Generated skill for "TOPIC"
+  Location: $SKILLS_DIR/TOPIC_SLUG/SKILL.md
 
   Skills created:
   - {{skill-name-1}}: [brief description]
