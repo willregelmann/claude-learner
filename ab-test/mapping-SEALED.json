@@ -1,0 +1,8 @@
+{
+  "note": "DO NOT READ until evaluation is complete. Maps blinded labels to conditions.",
+  "task-1-tailwind-v4": { "treatment": "Bravo", "control": "Alpha" },
+  "task-2-react-19-actions": { "treatment": "Alpha", "control": "Bravo" },
+  "task-3-drizzle-orm": { "treatment": "Bravo", "control": "Alpha" },
+  "task-4-bun-shell": { "treatment": "Alpha", "control": "Bravo" },
+  "task-5-vitest-vue3": { "treatment": "Alpha", "control": "Bravo" }
+}

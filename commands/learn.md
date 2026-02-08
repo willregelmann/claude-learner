@@ -187,6 +187,14 @@ sources:
 - [Scenario 2]
 - [Scenario 3]
 
+## Critical Gotchas
+
+[The 3-5 highest-impact mistakes that WILL break things if missed. These are the non-obvious errors that even experienced developers make. Each should be something that causes silent failures, broken functionality, or hard-to-debug issues. Prioritize by: how common the mistake is × how bad the consequence is.]
+
+- **[Gotcha 1]**: [What goes wrong] → [The fix, with code if needed]
+- **[Gotcha 2]**: [What goes wrong] → [The fix, with code if needed]
+- **[Gotcha 3]**: [What goes wrong] → [The fix, with code if needed]
+
 ## Key Patterns
 
 [Behavioral guidance organized by concept]
@@ -194,6 +202,8 @@ sources:
 [Include code examples where helpful]
 
 ## Common Mistakes to Avoid
+
+[Additional mistakes beyond the critical gotchas. Limit to 5-7 items, ordered by impact. If you have more than 7, merge related ones or drop the least impactful.]
 
 - **[Mistake 1]**: [Why wrong] → [What to do instead]
 - **[Mistake 2]**: [Why wrong] → [What to do instead]
@@ -206,8 +216,11 @@ sources:
 **Writing Guidelines:**
 - **Description**: Include WHAT + WHEN + trigger phrases
 - **Content**: Behavioral guidance, not reference documentation
+- **Critical Gotchas section**: The 3-5 most impactful mistakes, placed early for maximum visibility. These are the items that A/B testing shows have the highest ROI — they prevent broken functionality, not just suboptimal code. Prioritize: missing required directives/config > wrong API usage > deprecated patterns > style issues
+- **Common Mistakes section**: Cap at 5-7 items, ordered by impact. Merge related mistakes. Cut low-impact items rather than including everything found during research
 - **Length**: Keep under 500 lines; be concise
 - **Style**: Imperative form ("Do X" not "You should do X")
+- **Structure**: When to use → Critical gotchas → Key patterns → Common mistakes → Examples
 
 ## Phase 3: Report
 
